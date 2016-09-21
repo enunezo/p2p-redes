@@ -29,7 +29,7 @@ int main(int argc, char const *argv[]) {
 
     stSockAddr.sin_family = AF_INET;
     stSockAddr.sin_port = htons(1100);
-    Res = inet_pton(AF_INET, "192.168.0.117", &stSockAddr.sin_addr);
+    Res = inet_pton(AF_INET, "192.168.0.111", &stSockAddr.sin_addr);
 
     if (0 > Res)
     {
@@ -56,19 +56,19 @@ int main(int argc, char const *argv[]) {
     int msgSize = strlen(msg);
     char msgSizeSTR[11];
     sprintf(msgSizeSTR,"%04d",msgSize); // 0004
-    strcat(payLoad,"R"); // += 'R';
-
+    strcat(msgSizeSTR,"R"); // += 'R';
+    printf("%s\n", msgSizeSTR );
     // 0004 R 444 6001
 
     char ip[32];
-    strcpy(ip,"4444");
+    strcpy(ip,"1234");
 
-    sprintf(payLoad,"%s%4s%s",payLoad,ip,msg);
+    sprintf(payLoad,"%s%4s%s",msgSizeSTR,ip,msg);
     n = write(SocketFD,payLoad,4+1+4+msgSize);
     if(n < 4+1+4+msgSize){
         printf("ERROR!! ANIMAL!!\n");
     }else{
-
+        printf("%s\n", payLoad);
         printf("OK lo hiciste bien por primera vez\n");
 
     }

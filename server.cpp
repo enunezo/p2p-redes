@@ -58,6 +58,7 @@ void readFile(string fileName){
 void interpretador(int ConnectFD,char tipo, int msgSize){
     int n;
     char* buffer;
+    //Register
     if(tipo == 'R'){
         n = read(ConnectFD,buffer,15); // IP
         buffer[15] = '\0';
@@ -70,13 +71,12 @@ void interpretador(int ConnectFD,char tipo, int msgSize){
         cout << "hola" << endl;
 
     }
-
+    //Logout
     else if(tipo == 'L'){
         n = read(ConnectFD,buffer,15); // IP
         buffer[15] = '\0';
         char IP[15];
         strcpy(IP,buffer);
-
         remove(IP);
     }
 
@@ -84,7 +84,7 @@ void interpretador(int ConnectFD,char tipo, int msgSize){
         cout << "OK!" << endl;
 
     }
-
+    //Read all clients
     else if(tipo == 'P'){
         showRegister();
     }
