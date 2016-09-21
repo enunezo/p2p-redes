@@ -9,6 +9,7 @@
 #include <map>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -16,6 +17,9 @@ map<char *,char *> tracker;
 struct sockaddr_in stSockAddr;
 int SocketFD = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 ifstream * is;
+char * buffer;
+
+
 
 bool readFileIntoMemory (string fileName) {
     is = new ifstream (fileName, ifstream::binary);
@@ -25,7 +29,7 @@ bool readFileIntoMemory (string fileName) {
         int length = is->tellg();
         is->seekg (0, is->beg);
 
-        char * buffer = new char [length];
+        buffer = new char [length];
 
         std::cout << "Reading " << length << " characters... ";
         // read data as a block:
@@ -39,6 +43,19 @@ bool readFileIntoMemory (string fileName) {
     }
     // ...buffer contains the entire file...
 }
+
+void splitBuffer (){
+    int bufferSize = sizeof(buffer);
+    int n = bufferSize/tracker.size();
+    int pos =0;
+    for (int i = 0; i<tracker.size(); ++i){
+        //send to each peer
+        if (pos <= bufferSize){
+            pos+= n;
+        }
+    }
+}
+
 
 bool newRegister(char * IP, char * PORT){
     map<char *, char *>::iterator it = tracker.find(IP);
@@ -116,6 +133,7 @@ int main(int argc, char const *argv[]) {
     int n;
 
     cout<<readFileIntoMemory("prueba.txt");
+    splitBuffer();
 
     /*if(-1 == SocketFD)
     {
