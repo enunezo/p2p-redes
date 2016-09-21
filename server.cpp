@@ -135,7 +135,7 @@ int main(int argc, char const *argv[]) {
     cout<<readFileIntoMemory("prueba.txt");
     splitBuffer();
 
-    /*if(-1 == SocketFD)
+    if(-1 == SocketFD)
     {
       perror("can not create socket");
       exit(EXIT_FAILURE);
@@ -180,6 +180,6 @@ int main(int argc, char const *argv[]) {
     }
 
     close(SocketFD);
-*/
+
     return 0;
 }
