@@ -15,7 +15,30 @@ using namespace std;
 map<char *,char *> tracker;
 struct sockaddr_in stSockAddr;
 int SocketFD = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-ifstream myFile;
+ifstream * is;
+
+bool readFileIntoMemory (string fileName) {
+    is = new ifstream (fileName, ifstream::binary);
+    if (*is) {
+        // get length of file:
+        is->seekg (0, is->end);
+        int length = is->tellg();
+        is->seekg (0, is->beg);
+
+        char * buffer = new char [length];
+
+        std::cout << "Reading " << length << " characters... ";
+        // read data as a block:
+        is->read (buffer,length);
+        std::cout << "all characters read successfully.";
+        return true;
+    }
+    else{
+        std::cout << "error: only " << is->gcount() << " could be read";
+        return false;
+    }
+    // ...buffer contains the entire file...
+}
 
 bool newRegister(char * IP, char * PORT){
     map<char *, char *>::iterator it = tracker.find(IP);
@@ -43,17 +66,6 @@ bool remove(char * IP ){
     return true;
 }
 
-void readFile(string fileName){
-    myFile.open(fileName);
-    char output[100];
-    if (myFile.is_open()) {
-        while (!myFile.eof()) {
-        myFile >> output;
-        cout<<output;
-        }
-    }
-    myFile.close();
-}
 
 void interpretador(int ConnectFD,char tipo, int msgSize){
     int n;
@@ -103,7 +115,9 @@ int main(int argc, char const *argv[]) {
     char buffer[256];
     int n;
 
-    if(-1 == SocketFD)
+    cout<<readFileIntoMemory("prueba.txt");
+
+    /*if(-1 == SocketFD)
     {
       perror("can not create socket");
       exit(EXIT_FAILURE);
@@ -148,6 +162,6 @@ int main(int argc, char const *argv[]) {
     }
 
     close(SocketFD);
-
+*/
     return 0;
 }

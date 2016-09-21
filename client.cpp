@@ -29,7 +29,7 @@ int main(int argc, char const *argv[]) {
 
     stSockAddr.sin_family = AF_INET;
     stSockAddr.sin_port = htons(1100);
-    Res = inet_pton(AF_INET, "192.168.0.111", &stSockAddr.sin_addr);
+    Res = inet_pton(AF_INET, "192.168.43.150", &stSockAddr.sin_addr);
 
     if (0 > Res)
     {
