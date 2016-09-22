@@ -17,7 +17,7 @@ map<char *,char *> tracker;
 struct sockaddr_in stSockAddr;
 int SocketFD = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 ifstream * is;
-char * buffer;
+char * Buffer;
 
 
 
@@ -29,11 +29,11 @@ bool readFileIntoMemory (string fileName) {
         int length = is->tellg();
         is->seekg (0, is->beg);
 
-        buffer = new char [length];
+        Buffer = new char[length];
 
         std::cout << "Reading " << length << " characters... ";
         // read data as a block:
-        is->read (buffer,length);
+        is->read (Buffer,length);
         std::cout << "all characters read successfully.";
         return true;
     }
@@ -45,9 +45,10 @@ bool readFileIntoMemory (string fileName) {
 }
 
 void splitBuffer (){
-    int bufferSize = sizeof(buffer);
+    int bufferSize = sizeof(Buffer);
+    if (tracker.size() == 0) return;
     int n = bufferSize/tracker.size();
-    int pos =0;
+    int pos = 0;
     for (int i = 0; i<tracker.size(); ++i){
         //send to each peer
         if (pos <= bufferSize){
@@ -95,9 +96,9 @@ void interpretador(int ConnectFD,char tipo, int msgSize){
         strcpy(IP,buffer);
 
         n = read(ConnectFD,buffer,msgSize); // PORT
-
+        buffer[msgSize] = '\0';
         newRegister(IP,buffer);
-        cout << "hola" << endl;
+        cout << "<<<<<<<<" << endl;
 
     }
     //Logout
@@ -122,6 +123,12 @@ void interpretador(int ConnectFD,char tipo, int msgSize){
         cout << "ERROR" << endl;
     }
 
+    else if(tipo == 'F'){
+    	n = read(ConnectFD,buffer,msgSize); // Name File
+    	buffer[msgSize] = '\0';
+    	string str(buffer);
+    }
+
     else{
         cout << "me voy .... !!!!: " << tipo << endl;
         return;
@@ -134,6 +141,7 @@ int main(int argc, char const *argv[]) {
 
     cout<<readFileIntoMemory("prueba.txt");
     splitBuffer();
+        
 
     if(-1 == SocketFD)
     {
@@ -171,10 +179,11 @@ int main(int argc, char const *argv[]) {
         int msgSize = atoi(buffer);
 
         n = read(ConnectFD,buffer,1); // TYPE
+        buffer[1] = '\0';
         char msgType = buffer[0];
-
+        cout << "hola >" << endl;
         interpretador(ConnectFD,msgType,msgSize);
-        
+    	
         shutdown(ConnectFD, SHUT_RDWR);
         close(ConnectFD);
     }
